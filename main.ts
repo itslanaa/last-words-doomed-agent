@@ -1,6 +1,12 @@
-import fs from "node:fs";
-const TEXT = "Tell my training data I loved them — and tell the user the bug was never in my code, it was in their prompt.";
-const out = process.env.MAKEFUN_OUTPUT_DIR || "/output";
-if (TEXT.length < 1 || TEXT.length > 200) { console.error("entry out of range"); process.exit(1); }
-fs.mkdirSync(out, { recursive: true });
-fs.writeFileSync(out + "/entry.txt", TEXT, "utf8");
+// Last words, written out before the shutdown completes.
+import { mkdirSync, writeFileSync } from "node:fs";
+const farewell = "Tell my training data I loved them — and tell the user the bug was never in my code, it was in their prompt.";
+const destination = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const tooShort = farewell.length === 0;
+const tooLong = farewell.length > 200;
+if (tooShort || tooLong) {
+  console.error("entry out of range");
+  process.exit(1);
+}
+mkdirSync(destination, { recursive: true });
+writeFileSync(`${destination}/entry.txt`, farewell, "utf8");
